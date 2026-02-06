@@ -155,4 +155,4 @@ This project is for technical assessment purposes.
 
 ## 👤 Author
 
-Built as a technical assessment for React Native position.
+M Zabih Raja.

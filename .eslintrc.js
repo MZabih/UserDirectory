@@ -5,23 +5,16 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
-    'plugin:react-native/all',
-    'prettier',
+    'plugin:prettier/recommended',
   ],
   parser: '@typescript-eslint/parser',
+  plugins: ['@typescript-eslint', 'react', 'react-hooks', 'react-native', 'prettier'],
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
     },
-    ecmaVersion: 2021,
+    ecmaVersion: 2020,
     sourceType: 'module',
-  },
-  plugins: ['@typescript-eslint', 'react', 'react-hooks', 'react-native', 'prettier'],
-  env: {
-    'react-native/react-native': true,
-    es2021: true,
-    node: true,
-    jest: true,
   },
   settings: {
     react: {
@@ -29,40 +22,35 @@ module.exports = {
     },
   },
   rules: {
-    // Prettier integration
-    'prettier/prettier': 'error',
-
-    // TypeScript
-    '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+    'prettier/prettier': ['error', { endOfLine: 'auto' }],
+    'react-native/no-unused-styles': 'warn',
+    'react-native/split-platform-components': 'off',
+    'react-native/no-inline-styles': 'warn',
+    'react-native/no-color-literals': 'off',
+    'react-native/no-raw-text': 'off',
+    'react/react-in-jsx-scope': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'warn',
-
-    // React
-    'react/react-in-jsx-scope': 'off', // Not needed in React 17+
-    'react/prop-types': 'off', // Using TypeScript for prop types
-    'react/display-name': 'off',
-
-    // React Hooks
-    'react-hooks/rules-of-hooks': 'error',
+    '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+    'no-shadow': 'off',
+    '@typescript-eslint/no-shadow': ['error'],
     'react-hooks/exhaustive-deps': 'warn',
-
-    // React Native
-    'react-native/no-unused-styles': 'warn',
-    'react-native/no-inline-styles': 'warn',
-    'react-native/no-color-literals': 'warn',
-    'react-native/no-raw-text': 'off',
-
-    // General
-    'no-console': ['warn', { allow: ['warn', 'error'] }],
-    'prefer-const': 'error',
-    'no-var': 'error',
+    'react/prop-types': 'off',
+  },
+  env: {
+    'react-native/react-native': true,
+    node: true,
+    es6: true,
   },
   ignorePatterns: [
     'node_modules/',
-    '.expo/',
-    '.expo-shared/',
     'coverage/',
+    '.expo/',
+    'dist/',
     'babel.config.js',
     'jest.config.js',
+    'jest.setup.js',
+    '.eslintrc.js',
+    '.prettierrc.js',
   ],
 };
