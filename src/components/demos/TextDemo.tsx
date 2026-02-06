@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { Text, Card } from '@components/ui';
 import { SPACING } from '@constants';
 

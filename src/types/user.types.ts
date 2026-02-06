@@ -80,4 +80,5 @@ export interface UsersResponse {
   limit: number;
 }
 
-export interface UserSearchResponse extends UsersResponse {}
+// Search response has the same structure as UsersResponse
+export type UserSearchResponse = UsersResponse;

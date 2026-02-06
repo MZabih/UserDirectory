@@ -1,0 +1,56 @@
+module.exports = {
+  root: true,
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
+    'plugin:prettier/recommended',
+  ],
+  parser: '@typescript-eslint/parser',
+  plugins: ['@typescript-eslint', 'react', 'react-hooks', 'react-native', 'prettier'],
+  parserOptions: {
+    ecmaFeatures: {
+      jsx: true,
+    },
+    ecmaVersion: 2020,
+    sourceType: 'module',
+  },
+  settings: {
+    react: {
+      version: 'detect',
+    },
+  },
+  rules: {
+    'prettier/prettier': ['error', { endOfLine: 'auto' }],
+    'react-native/no-unused-styles': 'warn',
+    'react-native/split-platform-components': 'off',
+    'react-native/no-inline-styles': 'warn',
+    'react-native/no-color-literals': 'off',
+    'react-native/no-raw-text': 'off',
+    'react/react-in-jsx-scope': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
+    '@typescript-eslint/no-explicit-any': 'warn',
+    '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+    'no-shadow': 'off',
+    '@typescript-eslint/no-shadow': ['error'],
+    'react-hooks/exhaustive-deps': 'warn',
+    'react/prop-types': 'off',
+  },
+  env: {
+    'react-native/react-native': true,
+    node: true,
+    es6: true,
+  },
+  ignorePatterns: [
+    'node_modules/',
+    'coverage/',
+    '.expo/',
+    'dist/',
+    'babel.config.js',
+    'jest.config.js',
+    'jest.setup.js',
+    '.eslintrc.js',
+    '.prettierrc.js',
+  ],
+};
