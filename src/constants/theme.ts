@@ -4,15 +4,20 @@
  */
 
 export const COLORS = {
-  // Primary colors
-  primary: '#007AFF',
-  primaryLight: '#4DA3FF',
-  primaryDark: '#0055B3',
+  // Primary colors - Modern Teal/Cyan
+  primary: '#06B6D4',
+  primaryLight: '#22D3EE',
+  primaryDark: '#0891B2',
 
-  // Secondary colors
-  secondary: '#5856D6',
-  secondaryLight: '#7A79E5',
-  secondaryDark: '#3D3C9F',
+  // Secondary colors - Vibrant Purple
+  secondary: '#8B5CF6',
+  secondaryLight: '#A78BFA',
+  secondaryDark: '#7C3AED',
+
+  // Accent colors
+  accent: '#F59E0B',
+  accentLight: '#FBBF24',
+  accentDark: '#D97706',
 
   // Neutral colors
   white: '#FFFFFF',
@@ -30,19 +35,28 @@ export const COLORS = {
 
   // Semantic colors
   success: '#10B981',
+  successLight: '#34D399',
   warning: '#F59E0B',
+  warningLight: '#FBBF24',
   error: '#EF4444',
-  info: '#3B82F6',
+  errorLight: '#F87171',
+  info: '#06B6D4',
+  infoLight: '#22D3EE',
 
-  // Background colors
-  background: '#FFFFFF',
-  backgroundSecondary: '#F9FAFB',
+  // Background colors - Subtle gradient feel
+  background: '#F8FAFC',
+  backgroundSecondary: '#F1F5F9',
   surface: '#FFFFFF',
+  surfaceHover: '#F8FAFC',
+
+  // Border colors
+  border: '#E2E8F0',
+  borderLight: '#F1F5F9',
 
   // Text colors
-  textPrimary: '#111827',
-  textSecondary: '#6B7280',
-  textTertiary: '#9CA3AF',
+  textPrimary: '#0F172A',
+  textSecondary: '#475569',
+  textTertiary: '#94A3B8',
   textInverse: '#FFFFFF',
 } as const;
 

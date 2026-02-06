@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { View, StyleSheet, ViewStyle } from 'react-native';
+import { View, StyleSheet, ViewStyle, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { SPACING } from '@constants';
 import Text from './Text';
 import Button from './Button';
@@ -33,27 +33,29 @@ const EmptyState: React.FC<EmptyStateProps> = ({
   style,
 }) => {
   return (
-    <View style={[styles.container, style]}>
-      <Text variant="h1" center style={styles.icon}>
-        {icon}
-      </Text>
-
-      <Text variant="h3" weight="semibold" center style={styles.title}>
-        {title}
-      </Text>
-
-      {description && (
-        <Text variant="body1" color="secondary" center style={styles.description}>
-          {description}
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View style={[styles.container, style]}>
+        <Text variant="h1" center style={styles.icon}>
+          {icon}
         </Text>
-      )}
 
-      {actionText && onAction && (
-        <Button onPress={onAction} style={styles.button}>
-          {actionText}
-        </Button>
-      )}
-    </View>
+        <Text variant="h3" weight="semibold" center style={styles.title}>
+          {title}
+        </Text>
+
+        {description && (
+          <Text variant="body1" color="secondary" center style={styles.description}>
+            {description}
+          </Text>
+        )}
+
+        {actionText && onAction && (
+          <Button onPress={onAction} style={styles.button}>
+            {actionText}
+          </Button>
+        )}
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 

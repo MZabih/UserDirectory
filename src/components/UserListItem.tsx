@@ -48,6 +48,8 @@ const styles = StyleSheet.create({
   card: {
     marginHorizontal: SPACING.md,
     marginVertical: SPACING.xs,
+    borderLeftWidth: 3,
+    borderLeftColor: COLORS.primary,
   },
   content: {
     flexDirection: 'row',

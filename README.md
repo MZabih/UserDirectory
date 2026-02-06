@@ -118,7 +118,7 @@ The app includes a design system with reusable components:
   - Optimistic updates support
   - Zero boilerplate compared to Redux
 
-See [API_ARCHITECTURE_DECISIONS.md](./mdFiles/API_ARCHITECTURE_DECISIONS.md) for detailed explanation.
+For detailed comparison with Redux and other state management solutions, see project documentation.
 
 ### Performance
 
@@ -134,31 +134,32 @@ See [API_ARCHITECTURE_DECISIONS.md](./mdFiles/API_ARCHITECTURE_DECISIONS.md) for
 
 ## 📝 Development Notes
 
-### Search Implementation (Hybrid Client + Server)
+### Search Implementation
 
-The search uses a smart two-phase approach combining instant filtering with full database search:
+The app implements a **Hybrid Search Approach** that combines client-side filtering with server-side search capabilities.
 
-**Phase 1: Client-Side Filtering** (Instant)
+**Quick Overview:**
 
-- Filters already loaded users (30/60/90+) as you type
-- Instant results with zero latency
-- Searches: name, email, username
-- "Load More Results from Server" button appears
+- **Client-Side Search**: Instant filtering of loaded users as you type (⚡ < 50ms)
+- **Server-Side Search**: On-demand comprehensive search via "Load More Results from Server" button
+- **Smart State Management**: Automatically switches between modes based on user actions
 
-**Phase 2: Server-Side Search** (On Demand)
+**Why This Approach?**
 
-- Clicking "Load More" switches to full database search
-- API: `/users/search?q={query}&limit=30&skip=0`
-- Paginated results (30 per page)
-- Infinite scroll for additional pages
+- ⚡ Instant feedback for common searches
+- 🔍 Complete dataset search when needed
+- 📊 Network-efficient (API calls only when requested)
+- 🎯 User control and clear affordances
 
-**Benefits:**
+**📖 For detailed documentation including:**
 
-- Instant feedback from loaded data
-- Matches assignment: "filter the list"
-- Optional full database search when needed
-- Battery efficient (API only when requested)
-- User controls scope of search
+- Implementation details and code examples
+- Alternative approaches considered (debounced search, autocomplete, etc.)
+- Performance analysis and trade-offs
+- Scalability considerations
+- Testing strategy
+
+**See: [SEARCH_IMPLEMENTATION.md](./SEARCH_IMPLEMENTATION.md)**
 
 ### Pagination Strategy
 

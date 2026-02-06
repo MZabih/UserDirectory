@@ -14,8 +14,9 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Text, EmptyState, Loading, Button, Input } from '@ui';
+import { Text, EmptyState, Loading, Button } from '@ui';
 import { UserListItem } from '@components/UserListItem';
+import { SearchBar } from '@components/SearchBar';
 import { useInfiniteUsers, useInfiniteSearchUsers } from '@hooks';
 import { COLORS, SPACING } from '@constants';
 import { getErrorMessage } from '@utils';
@@ -70,7 +71,7 @@ export const HomeScreen: React.FC = () => {
   const serverSearchUsers = searchInfiniteData?.pages.flatMap((page) => page.users) || [];
 
   // Determine which data to display
-  const isSearching = searchQuery.length > 0 && searchMode === 'server';
+  const isSearching = searchQuery.length > 0;
   const isClientSearch = searchMode === 'client' && searchQuery.length > 0;
   const isServerSearch = searchMode === 'server';
 
@@ -186,14 +187,20 @@ export const HomeScreen: React.FC = () => {
   if (isSearching && users.length === 0 && !isLoading) {
     return (
       <View style={styles.container}>
+        {/* Fixed Search Bar */}
         <View style={styles.searchContainer}>
-          <Input
-            placeholder="Search users..."
+          <SearchBar
+            placeholder="Search users by name, email, or username..."
             value={searchQuery}
             onChangeText={setSearchQuery}
             onClear={handleClearSearch}
-            showClear={true}
-            autoCorrect={false}
+            helperText={
+              isClientSearch
+                ? `Filtering ${allLoadedUsers.length} loaded users`
+                : isServerSearch
+                  ? `Searching all users for "${searchQuery}"`
+                  : undefined
+            }
           />
         </View>
         <View style={styles.centerContainer}>
@@ -205,16 +212,9 @@ export const HomeScreen: React.FC = () => {
                 ? `No users found in loaded data. Try "Load More" to search all users.`
                 : `No users found for '${searchQuery}'`
             }
+            actionText={isClientSearch ? 'Search All Users' : undefined}
+            onAction={isClientSearch ? handleLoadMoreSearch : undefined}
           />
-          {isClientSearch && (
-            <Button
-              variant="outline"
-              onPress={handleLoadMoreSearch}
-              style={styles.emptyLoadMoreButton}
-            >
-              Search All Users
-            </Button>
-          )}
         </View>
       </View>
     );
@@ -222,33 +222,29 @@ export const HomeScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
+      {/* Fixed Search Bar */}
+      <View style={styles.searchContainer}>
+        <SearchBar
+          placeholder="Search users by name, email, or username..."
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          onClear={handleClearSearch}
+          helperText={
+            isClientSearch
+              ? `Filtering ${allLoadedUsers.length} loaded users`
+              : isServerSearch
+                ? `Searching all users for "${searchQuery}"`
+                : undefined
+          }
+        />
+      </View>
+
+      {/* Scrollable User List */}
       <FlatList
         data={users}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
         keyboardDismissMode="on-drag"
-        ListHeaderComponent={
-          <View style={styles.searchContainer}>
-            <Input
-              placeholder="Search users..."
-              value={searchQuery}
-              onChangeText={setSearchQuery}
-              onClear={handleClearSearch}
-              showClear={true}
-              autoCorrect={false}
-            />
-            {isClientSearch && (
-              <Text variant="caption" style={[styles.searchInfo, { color: COLORS.textSecondary }]}>
-                Filtering {allLoadedUsers.length} loaded users
-              </Text>
-            )}
-            {isServerSearch && (
-              <Text variant="caption" style={[styles.searchInfo, { color: COLORS.textSecondary }]}>
-                Searching all users for &quot;{searchQuery}&quot;
-              </Text>
-            )}
-          </View>
-        }
         ListFooterComponent={
           <>
             {renderLoadMoreButton()}
@@ -286,11 +282,13 @@ const styles = StyleSheet.create({
   searchContainer: {
     paddingHorizontal: SPACING.md,
     paddingTop: SPACING.md,
-    paddingBottom: SPACING.sm,
-    backgroundColor: COLORS.background,
-  },
-  searchInfo: {
-    marginTop: SPACING.xs,
+    paddingBottom: SPACING.md,
+    backgroundColor: COLORS.white,
+    shadowColor: COLORS.primary,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   listContent: {
     paddingBottom: SPACING.md,
@@ -307,8 +305,5 @@ const styles = StyleSheet.create({
   },
   loadMoreButton: {
     minWidth: 200,
-  },
-  emptyLoadMoreButton: {
-    marginTop: SPACING.lg,
   },
 });

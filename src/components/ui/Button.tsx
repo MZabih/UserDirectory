@@ -133,12 +133,12 @@ const variantStyles = StyleSheet.create({
     borderWidth: 0,
   },
   secondary: {
-    backgroundColor: COLORS.gray100,
+    backgroundColor: COLORS.secondary,
     borderWidth: 0,
   },
   outline: {
     backgroundColor: 'transparent',
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: COLORS.primary,
   },
   ghost: {
