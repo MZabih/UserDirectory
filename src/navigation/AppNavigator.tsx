@@ -19,12 +19,15 @@ const AppNavigator: React.FC = () => {
       <Stack.Navigator
         screenOptions={{
           headerStyle: {
-            backgroundColor: COLORS.surface,
+            backgroundColor: COLORS.primary,
           },
-          headerTintColor: COLORS.primary,
+          headerTintColor: COLORS.white,
           headerTitleStyle: {
             fontWeight: '600',
+            fontSize: 18,
           },
+          headerShadowVisible: true,
+          headerBackTitle: 'Back',
         }}
       >
         <Stack.Screen

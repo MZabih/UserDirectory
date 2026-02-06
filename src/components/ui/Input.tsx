@@ -40,11 +40,20 @@ const Input: React.FC<InputProps> = ({
   style,
   ...rest
 }) => {
+  const [isFocused, setIsFocused] = React.useState(false);
   const hasError = !!error;
   const hasSuccess = success && !hasError;
   const showClearButton = showClear && value && value.length > 0;
 
-  const borderColor = hasError ? COLORS.error : hasSuccess ? COLORS.success : COLORS.gray300;
+  const borderColor = hasError
+    ? COLORS.error
+    : hasSuccess
+      ? COLORS.success
+      : isFocused
+        ? COLORS.primary
+        : COLORS.gray300;
+
+  const backgroundColor = isFocused ? COLORS.primaryLight + '08' : COLORS.white;
 
   return (
     <View style={styles.container}>
@@ -54,13 +63,21 @@ const Input: React.FC<InputProps> = ({
         </Text>
       )}
 
-      <View style={[styles.inputContainer, { borderColor }]}>
+      <View style={[styles.inputContainer, { borderColor, backgroundColor }]}>
         {leftIcon && <View style={styles.leftIcon}>{leftIcon}</View>}
 
         <TextInput
           style={[styles.input, style]}
           value={value}
-          placeholderTextColor={COLORS.gray400}
+          placeholderTextColor={COLORS.textTertiary}
+          onFocus={(e) => {
+            setIsFocused(true);
+            rest.onFocus?.(e);
+          }}
+          onBlur={(e) => {
+            setIsFocused(false);
+            rest.onBlur?.(e);
+          }}
           {...rest}
         />
 
@@ -101,10 +118,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: COLORS.white,
-    borderWidth: 1,
-    borderRadius: BORDER_RADIUS.md,
+    borderWidth: 2,
+    borderRadius: BORDER_RADIUS.lg,
     paddingHorizontal: SPACING.md,
-    minHeight: 48,
+    minHeight: 52,
+    shadowColor: COLORS.primary,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 2,
   },
   input: {
     flex: 1,
