@@ -67,6 +67,7 @@ const styles = StyleSheet.create({
   icon: {
     fontSize: 64,
     marginBottom: SPACING.lg,
+    paddingTop: SPACING.xl,
   },
   title: {
     marginBottom: SPACING.sm,

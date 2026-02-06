@@ -1,5 +1,5 @@
 /**
- * Central export point for all services
+ * Services Barrel Export
  */
 
 export * from './api.client';

@@ -1,71 +1,61 @@
 /**
- * React Query hooks for users data
+ * useUsers Hook
+ * React Query hooks for user data fetching
  */
 
-import {
-  useQuery,
-  useInfiniteQuery,
-  UseQueryResult,
-  UseInfiniteQueryResult,
-} from '@tanstack/react-query';
-import { fetchUsers, fetchUserById, searchUsers } from '../services';
-import { QUERY_KEYS, API_CONFIG } from '@constants';
-import type { User, UsersResponse, UserSearchResponse } from '@types';
+import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
+import { fetchUsers, fetchUserById, searchUsers } from '@services';
+import type { UsersResponse, User } from '@types';
 
 /**
- * Hook to fetch paginated users list
+ * Hook for fetching paginated users with infinite scroll
  */
-export const useUsers = (
-  limit: number = API_CONFIG.PAGINATION.DEFAULT_LIMIT
-): UseQueryResult<UsersResponse, Error> => {
-  return useQuery({
-    queryKey: [QUERY_KEYS.USERS, limit],
-    queryFn: () => fetchUsers(limit, 0),
-    staleTime: 5 * 60 * 1000, // 5 minutes
-  });
-};
-
-/**
- * Hook to fetch infinite scrolling users list
- */
-export const useInfiniteUsers = (
-  limit: number = API_CONFIG.PAGINATION.DEFAULT_LIMIT
-): UseInfiniteQueryResult<UsersResponse, Error> => {
-  return useInfiniteQuery({
-    queryKey: [QUERY_KEYS.USERS, 'infinite', limit],
+export const useInfiniteUsers = (limit: number = 30) => {
+  return useInfiniteQuery<UsersResponse, Error>({
+    queryKey: ['users', 'infinite', limit],
     queryFn: ({ pageParam = 0 }) => fetchUsers(limit, pageParam as number),
-    getNextPageParam: (lastPage, allPages) => {
-      const totalFetched = allPages.reduce((sum, page) => sum + page.users.length, 0);
-      return totalFetched < lastPage.total ? totalFetched : undefined;
+    getNextPageParam: (lastPage: UsersResponse, allPages: UsersResponse[]) => {
+      const currentCount = allPages.reduce((acc, page) => acc + page.users.length, 0);
+      return currentCount < lastPage.total ? currentCount : undefined;
     },
     initialPageParam: 0,
-    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 };
 
 /**
- * Hook to fetch a single user by ID
+ * Hook for fetching a single user by ID
  */
-export const useUser = (userId: number): UseQueryResult<User, Error> => {
-  return useQuery({
-    queryKey: [QUERY_KEYS.USER_DETAIL, userId],
-    queryFn: () => fetchUserById(userId),
-    enabled: !!userId, // Only fetch if userId is provided
-    staleTime: 10 * 60 * 1000, // 10 minutes
+export const useUser = (id: number) => {
+  return useQuery<User, Error>({
+    queryKey: ['users', id],
+    queryFn: () => fetchUserById(id),
+    enabled: !!id,
   });
 };
 
 /**
- * Hook to search users
+ * Hook for searching users (single query)
  */
-export const useSearchUsers = (
-  searchQuery: string,
-  limit: number = API_CONFIG.PAGINATION.DEFAULT_LIMIT
-): UseQueryResult<UserSearchResponse, Error> => {
-  return useQuery({
-    queryKey: [QUERY_KEYS.SEARCH_USERS, searchQuery, limit],
-    queryFn: () => searchUsers(searchQuery, limit, 0),
-    enabled: searchQuery.length > 0, // Only search if query is not empty
-    staleTime: 2 * 60 * 1000, // 2 minutes
+export const useSearchUsers = (query: string, limit: number = 30) => {
+  return useQuery<UsersResponse, Error>({
+    queryKey: ['users', 'search', query, limit],
+    queryFn: () => searchUsers(query, limit),
+    enabled: query.length > 0,
+  });
+};
+
+/**
+ * Hook for searching users with infinite scroll pagination
+ */
+export const useInfiniteSearchUsers = (query: string, limit: number = 30) => {
+  return useInfiniteQuery<UsersResponse, Error>({
+    queryKey: ['users', 'search', 'infinite', query, limit],
+    queryFn: ({ pageParam = 0 }) => searchUsers(query, limit, pageParam as number),
+    getNextPageParam: (lastPage: UsersResponse, allPages: UsersResponse[]) => {
+      const currentCount = allPages.reduce((acc, page) => acc + page.users.length, 0);
+      return currentCount < lastPage.total ? currentCount : undefined;
+    },
+    initialPageParam: 0,
+    enabled: query.length > 0,
   });
 };

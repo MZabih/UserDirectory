@@ -21,3 +21,7 @@ export const QUERY_KEYS = {
   USER_DETAIL: 'user-detail',
   SEARCH_USERS: 'search-users',
 } as const;
+
+// Backwards compatibility exports
+export const API_BASE_URL = API_CONFIG.BASE_URL;
+export const API_ENDPOINTS = API_CONFIG.ENDPOINTS;

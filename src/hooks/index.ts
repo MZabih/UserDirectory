@@ -1,5 +1,6 @@
 /**
- * Central export point for all custom hooks
+ * Hooks Barrel Export
  */
 
 export * from './useUsers';
+export * from './useDebounce';

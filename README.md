@@ -15,9 +15,12 @@ A React Native application that demonstrates best practices in mobile developmen
 
 - **React Native** (Expo SDK 54)
 - **TypeScript** - Type safety
-- **React Navigation** - Navigation management
+- **React Navigation** (@react-navigation/stack) - Navigation management
+- **React Query** (@tanstack/react-query) - Server state management
+- **Axios** - HTTP client
 - **react-native-reanimated** - Smooth animations
 - **Jest & React Native Testing Library** - Unit/Integration testing
+- **ESLint & Prettier** - Code quality and formatting
 - **DummyJSON API** - Data source
 
 ## 📁 Project Structure
@@ -106,8 +109,16 @@ The app includes a design system with reusable components:
 
 ### State Management
 
-- **Local State**: React hooks for component state
-- **API Caching**: (To be implemented with React Query or similar)
+- **Server State**: React Query for API data caching, pagination, and synchronization
+- **Client State**: React hooks (useState, useReducer) for local component state
+- **Why React Query?**:
+  - Automatic caching and background refetching
+  - Built-in pagination and infinite scroll support
+  - Request deduplication and retry logic
+  - Optimistic updates support
+  - Zero boilerplate compared to Redux
+
+See [API_ARCHITECTURE_DECISIONS.md](./mdFiles/API_ARCHITECTURE_DECISIONS.md) for detailed explanation.
 
 ### Performance
 
@@ -123,9 +134,31 @@ The app includes a design system with reusable components:
 
 ## 📝 Development Notes
 
-### Search Implementation
+### Search Implementation (Hybrid Client + Server)
 
-The search functionality uses the DummyJSON search endpoint with debouncing to minimize API calls and improve performance.
+The search uses a smart two-phase approach combining instant filtering with full database search:
+
+**Phase 1: Client-Side Filtering** (Instant)
+
+- Filters already loaded users (30/60/90+) as you type
+- Instant results with zero latency
+- Searches: name, email, username
+- "Load More Results from Server" button appears
+
+**Phase 2: Server-Side Search** (On Demand)
+
+- Clicking "Load More" switches to full database search
+- API: `/users/search?q={query}&limit=30&skip=0`
+- Paginated results (30 per page)
+- Infinite scroll for additional pages
+
+**Benefits:**
+
+- Instant feedback from loaded data
+- Matches assignment: "filter the list"
+- Optional full database search when needed
+- Battery efficient (API only when requested)
+- User controls scope of search
 
 ### Pagination Strategy
 
@@ -141,13 +174,26 @@ The search functionality uses the DummyJSON search endpoint with debouncing to m
 
 ## 🔧 Scripts
 
+### Development
+
 - `npm start` - Start Expo development server
 - `npm run ios` - Run on iOS simulator
 - `npm run android` - Run on Android emulator
+
+### Testing
+
 - `npm test` - Run tests
 - `npm run test:watch` - Run tests in watch mode
 - `npm run test:coverage` - Generate coverage report
+
+### Code Quality
+
 - `npm run type-check` - Run TypeScript type checking
+- `npm run lint` - Run ESLint
+- `npm run lint:fix` - Fix ESLint issues automatically
+- `npm run format` - Format code with Prettier
+- `npm run format:check` - Check if code is formatted
+- `npm run validate` - Run all checks (type-check + lint + format + test)
 
 ## 📄 License
 
