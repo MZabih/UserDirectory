@@ -1,20 +1,17 @@
 /**
- * User API service
- * Handles all user-related API calls
+ * Users Service
+ * API calls for user-related operations
  */
 
 import { apiClient } from './api.client';
-import { API_CONFIG } from '@constants';
-import type { User, UsersResponse, UserSearchResponse } from '@types';
+import { API_ENDPOINTS } from '@constants';
+import type { UsersResponse, User } from '@types';
 
 /**
  * Fetch paginated list of users
  */
-export const fetchUsers = async (
-  limit: number = API_CONFIG.PAGINATION.DEFAULT_LIMIT,
-  skip: number = 0
-): Promise<UsersResponse> => {
-  const response = await apiClient.get<UsersResponse>(API_CONFIG.ENDPOINTS.USERS, {
+export const fetchUsers = async (limit: number, skip: number): Promise<UsersResponse> => {
+  const response = await apiClient.get<UsersResponse>(API_ENDPOINTS.USERS, {
     params: { limit, skip },
   });
   return response.data;
@@ -23,20 +20,20 @@ export const fetchUsers = async (
 /**
  * Fetch a single user by ID
  */
-export const fetchUserById = async (userId: number): Promise<User> => {
-  const response = await apiClient.get<User>(API_CONFIG.ENDPOINTS.USER_BY_ID(userId));
+export const fetchUserById = async (id: number): Promise<User> => {
+  const response = await apiClient.get<User>(`${API_ENDPOINTS.USERS}/${id}`);
   return response.data;
 };
 
 /**
- * Search users by query string
+ * Search users by query with pagination support
  */
 export const searchUsers = async (
   query: string,
-  limit: number = API_CONFIG.PAGINATION.DEFAULT_LIMIT,
+  limit: number = 30,
   skip: number = 0
-): Promise<UserSearchResponse> => {
-  const response = await apiClient.get<UserSearchResponse>(API_CONFIG.ENDPOINTS.SEARCH_USERS, {
+): Promise<UsersResponse> => {
+  const response = await apiClient.get<UsersResponse>(API_ENDPOINTS.SEARCH_USERS, {
     params: { q: query, limit, skip },
   });
   return response.data;

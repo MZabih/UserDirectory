@@ -91,7 +91,7 @@ const variantStyles = StyleSheet.create({
   overline: {
     fontSize: TYPOGRAPHY.fontSize.xs,
     lineHeight: TYPOGRAPHY.fontSize.xs * TYPOGRAPHY.lineHeight.normal,
-    textTransform: 'uppercase',
+    textTransform: 'uppercase' as const,
     letterSpacing: 0.5,
   },
 });
