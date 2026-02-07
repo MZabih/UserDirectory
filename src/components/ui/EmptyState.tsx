@@ -1,10 +1,11 @@
 /**
  * EmptyState Component - Empty/error state placeholders
- * Provides consistent empty states across the app
+ * Provides consistent empty states across the app with animated icon
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, StyleSheet, ViewStyle, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withRepeat, withSequence, withSpring } from 'react-native-reanimated';
 import { SPACING } from '@constants';
 import Text from './Text';
 import Button from './Button';
@@ -32,12 +33,34 @@ const EmptyState: React.FC<EmptyStateProps> = ({
   onAction,
   style,
 }) => {
+  // Animation values
+  const scale = useSharedValue(1);
+
+  // Start animation on mount
+  useEffect(() => {
+    scale.value = withRepeat(
+      withSequence(
+        withSpring(1.1, { damping: 8, stiffness: 100 }),
+        withSpring(1, { damping: 8, stiffness: 100 })
+      ),
+      -1, // Infinite repeat
+      false
+    );
+  }, []);
+
+  // Animated style
+  const animatedIconStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={[styles.container, style]}>
-        <Text variant="h1" center style={styles.icon}>
-          {icon}
-        </Text>
+        <Animated.View style={animatedIconStyle}>
+          <Text variant="h1" center style={styles.icon}>
+            {icon}
+          </Text>
+        </Animated.View>
 
         <Text variant="h3" weight="semibold" center style={styles.title}>
           {title}

@@ -53,7 +53,6 @@ export const UserDetailScreen: React.FC = () => {
           @{user.username}
         </Text>
       </View>
-
       {/* Contact Information */}
       <Card style={styles.card}>
         <Text variant="h3" style={styles.sectionTitle}>
