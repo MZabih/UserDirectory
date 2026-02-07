@@ -1,5 +1,5 @@
 // Jest setup file
-import '@testing-library/react-native/extend-expect';
+import '@testing-library/jest-native/extend-expect';
 
 // Mock react-native-reanimated
 jest.mock('react-native-reanimated', () => {
@@ -8,5 +8,25 @@ jest.mock('react-native-reanimated', () => {
   return Reanimated;
 });
 
-// Silence the warning: Animated: `useNativeDriver` is not supported
-jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
+// Mock React Navigation
+jest.mock('@react-navigation/native', () => {
+  const actualNav = jest.requireActual('@react-navigation/native');
+  return {
+    ...actualNav,
+    useNavigation: () => ({
+      navigate: jest.fn(),
+      goBack: jest.fn(),
+      setOptions: jest.fn(),
+    }),
+    useRoute: () => ({
+      params: {},
+    }),
+  };
+});
+
+// Suppress console warnings in tests
+global.console = {
+  ...console,
+  warn: jest.fn(),
+  error: jest.fn(),
+};

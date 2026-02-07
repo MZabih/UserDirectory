@@ -32,13 +32,34 @@ yarn-error.*
 
 # local env files
 .env*.local
+.env
 
 # typescript
 *.tsbuildinfo
+
+# test coverage
+coverage/
+*.lcov
 
 # generated native folders
 /ios
 /android
 
-# project documentation and progress tracking
+# IDE - VSCode, WebStorm, etc.
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# logs
+*.log
+logs/
+
+# temporary files
+*.tmp
+*.temp
+.cache/
+
+# project documentation and progress tracking (internal notes)
 mdFiles/

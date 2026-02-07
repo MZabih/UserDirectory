@@ -34,7 +34,7 @@ const Loading: React.FC<LoadingProps> = ({
   const containerStyle = fullScreen ? styles.fullScreen : styles.inline;
 
   return (
-    <View style={[containerStyle, style]}>
+    <View style={[containerStyle, style]} testID="loading-indicator">
       <ActivityIndicator size={indicatorSize} color={color} />
       {text && (
         <Text variant="body2" color="secondary" center style={styles.text}>
