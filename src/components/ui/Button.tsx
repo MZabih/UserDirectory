@@ -64,6 +64,7 @@ const Button: React.FC<ButtonProps> = ({
           <ActivityIndicator
             size="small"
             color={variant === 'primary' ? COLORS.white : COLORS.primary}
+            testID="button-loading-indicator"
           />
           <Text variant={textSize} weight="semibold" style={[styles.text, { color: textColor }]}>
             {children}
