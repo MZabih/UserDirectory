@@ -27,7 +27,7 @@ const AppNavigator: React.FC = () => {
             fontSize: 18,
           },
           headerShadowVisible: true,
-          headerBackTitle: 'Back',
+          headerBackTitle: 'Back', // Empty string to hide back button text
         }}
       >
         <Stack.Screen
