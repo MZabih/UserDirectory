@@ -19,9 +19,11 @@ export interface AvatarProps {
   size?: AvatarSize;
   /** Custom style */
   style?: ViewStyle;
+  /** Test ID for E2E testing */
+  testID?: string;
 }
 
-const Avatar: React.FC<AvatarProps> = ({ source, initials, size = 'medium', style }) => {
+const Avatar: React.FC<AvatarProps> = ({ source, initials, size = 'medium', style, testID }) => {
   const [imageError, setImageError] = useState(false);
   const [imageLoading, setImageLoading] = useState(true);
 
@@ -33,7 +35,7 @@ const Avatar: React.FC<AvatarProps> = ({ source, initials, size = 'medium', styl
   const showPlaceholder = !showImage && !showInitials;
 
   return (
-    <View style={[styles.container, sizeStyle, style]}>
+    <View testID={testID} style={[styles.container, sizeStyle, style]}>
       {showImage && (
         <Image
           source={{ uri: source }}

@@ -40,13 +40,14 @@ export const UserDetailScreen: React.FC = () => {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       {/* Profile Section */}
-      <View style={styles.profileSection}>
+      <View style={styles.profileSection} testID="user-detail-screen">
         <Avatar
+          testID="user-avatar"
           source={user.image}
           size="large"
           initials={`${user.firstName[0]}${user.lastName[0]}`}
         />
-        <Text variant="h1" style={styles.name}>
+        <Text variant="h1" style={styles.name} testID="user-full-name">
           {fullName}
         </Text>
         <Text variant="body1" style={{ color: COLORS.textSecondary }}>

@@ -17,7 +17,7 @@ interface UserListItemProps {
 
 export const UserListItem: React.FC<UserListItemProps> = ({ user, onPress }) => {
   const fullName = `${user.firstName} ${user.lastName}`;
-  
+
   // Animation value
   const scale = useSharedValue(1);
 
@@ -28,16 +28,19 @@ export const UserListItem: React.FC<UserListItemProps> = ({ user, onPress }) => 
 
   return (
     <Pressable
+      testID={`user-item-${user.id}`}
       onPress={() => onPress(user)}
       onPressIn={() => {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         scale.value = withSpring(0.97, { damping: 15, stiffness: 400 });
       }}
       onPressOut={() => {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         scale.value = withSpring(1, { damping: 15, stiffness: 400 });
       }}
     >
       <Animated.View style={animatedStyle}>
-        <Card style={styles.card}>
+        <Card style={styles.card} testID={`user-card-${user.id}`}>
           <View style={styles.content}>
             <Avatar
               source={user.image}

@@ -38,6 +38,7 @@ const Input: React.FC<InputProps> = ({
   rightIcon,
   value,
   style,
+  testID,
   ...rest
 }) => {
   const [isFocused, setIsFocused] = React.useState(false);
@@ -67,6 +68,7 @@ const Input: React.FC<InputProps> = ({
         {leftIcon && <View style={styles.leftIcon}>{leftIcon}</View>}
 
         <TextInput
+          testID={testID}
           style={[styles.input, style]}
           value={value}
           placeholderTextColor={COLORS.textTertiary}

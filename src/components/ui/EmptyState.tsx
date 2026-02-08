@@ -57,7 +57,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={[styles.container, style]}>
         <Animated.View style={animatedIconStyle}>
-          <Text variant="h1" center style={styles.icon}>
+          <Text variant="h1" center style={styles.icon} testID="empty-state-icon">
             {icon}
           </Text>
         </Animated.View>
