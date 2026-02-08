@@ -8,6 +8,7 @@ This document describes the testing strategy, implementation, and best practices
 - **Jest**: Test runner and assertion library
 - **React Native Testing Library**: Component testing utilities
 - **Testing Library/Jest Native**: Additional matchers
+- **Detox**: E2E testing framework
 
 **Coverage Target:** 70% (branches, functions, lines, statements)
 
@@ -19,10 +20,11 @@ This document describes the testing strategy, implementation, and best practices
 2. [Test Structure](#test-structure)
 3. [Unit Tests](#unit-tests)
 4. [Integration Tests](#integration-tests)
-5. [Mocking Strategy](#mocking-strategy)
-6. [Running Tests](#running-tests)
-7. [Coverage Reports](#coverage-reports)
-8. [Best Practices](#best-practices)
+5. [E2E Tests](#e2e-tests)
+6. [Mocking Strategy](#mocking-strategy)
+7. [Running Tests](#running-tests)
+8. [Coverage Reports](#coverage-reports)
+9. [Best Practices](#best-practices)
 
 ---
 
@@ -275,6 +277,63 @@ it('should show error message on fetch failure', async () => {
 - ✅ Pagination
 - ✅ User interactions
 - ✅ Navigation
+
+---
+
+## E2E Tests
+
+### Overview
+
+E2E tests validate complete user journeys using Detox on real devices/simulators. These tests ensure all features work together correctly in a production-like environment.
+
+**📖 For detailed E2E documentation, see: [E2E_TESTING.md](./E2E_TESTING.md)**
+
+### E2E Test Flow
+
+The E2E test file (`e2e/userFlow.e2e.ts`) implements the required flow:
+
+1. **Launch app → Home screen loads users**
+   - Validates app launches successfully
+   - Verifies users list is visible
+   - Confirms data loading works
+
+2. **Use search → list updates**
+   - Tests search input interaction
+   - Validates filtering functionality
+   - Confirms list updates correctly
+
+3. **Tap a user → Detail screen opens**
+   - Tests navigation flow
+   - Validates detail screen rendering
+   - Confirms user data display
+
+4. **Interact with an animated element and validate something observable**
+   - Tests card press animation
+   - Validates avatar interaction
+   - Confirms empty state icon animation
+
+### Running E2E Tests
+
+```bash
+# Build and run on iOS
+npm run build:e2e:ios
+npm run test:e2e:ios
+
+# Build and run on Android
+npm run build:e2e:android
+npm run test:e2e:android
+```
+
+### Test IDs
+
+Components have been updated with `testID` props for E2E testing:
+- `users-list` - Users FlatList
+- `search-input` - Search input field
+- `user-item-{id}` - Individual user items
+- `user-card-{id}` - User cards (animated)
+- `user-detail-screen` - Detail screen container
+- `user-avatar` - User avatar (animated)
+- `empty-state-icon` - Empty state icon (animated)
 
 ---
 

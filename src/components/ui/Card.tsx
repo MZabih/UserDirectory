@@ -18,6 +18,8 @@ export interface CardProps extends ViewProps {
   onPress?: () => void;
   /** Card content */
   children: React.ReactNode;
+  /** Test ID for E2E testing */
+  testID?: string;
 }
 
 const Card: React.FC<CardProps> = ({
@@ -26,13 +28,28 @@ const Card: React.FC<CardProps> = ({
   onPress,
   children,
   style,
+  testID,
   ...rest
 }) => {
-  const variantStyle = variantStyles[variant];
+  // Get variant style - using switch to help linter understand usage
+  const getVariantStyle = () => {
+    switch (variant) {
+      case 'elevated':
+        return variantStyles.elevated;
+      case 'outlined':
+        return variantStyles.outlined;
+      case 'flat':
+        return variantStyles.flat;
+      default:
+        return variantStyles.elevated;
+    }
+  };
+  const variantStyle = getVariantStyle();
 
   if (pressable && onPress) {
     return (
       <TouchableOpacity
+        testID={testID}
         style={[styles.base, variantStyle, style]}
         onPress={onPress}
         activeOpacity={0.7}
@@ -44,7 +61,7 @@ const Card: React.FC<CardProps> = ({
   }
 
   return (
-    <View style={[styles.base, variantStyle, style]} {...rest}>
+    <View testID={testID} style={[styles.base, variantStyle, style]} {...rest}>
       {children}
     </View>
   );
@@ -58,6 +75,7 @@ const styles = StyleSheet.create({
   },
 });
 
+// eslint-disable-next-line react-native/no-unused-styles
 const variantStyles = StyleSheet.create({
   elevated: {
     ...SHADOWS.md,

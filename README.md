@@ -68,6 +68,8 @@ npm run android
 
 ## 🧪 Testing
 
+### Unit & Integration Tests
+
 ```bash
 # Run unit and integration tests
 npm test
@@ -78,6 +80,20 @@ npm run test:watch
 # Generate coverage report
 npm run test:coverage
 ```
+
+### E2E Tests (Detox)
+
+```bash
+# Build and run E2E tests on iOS
+npm run build:e2e:ios
+npm run test:e2e:ios
+
+# Build and run E2E tests on Android
+npm run build:e2e:android
+npm run test:e2e:android
+```
+
+**📖 For detailed E2E testing documentation, see: [E2E_TESTING.md](./E2E_TESTING.md)**
 
 ### Test Results ✅
 

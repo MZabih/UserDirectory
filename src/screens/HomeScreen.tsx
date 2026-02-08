@@ -53,7 +53,10 @@ export const HomeScreen: React.FC = () => {
   } = useInfiniteSearchUsers(searchQuery, 30);
 
   // Get all loaded users from main list
-  const allLoadedUsers = infiniteData?.pages.flatMap((page) => page.users) || [];
+  const allLoadedUsers = React.useMemo(
+    () => infiniteData?.pages.flatMap((page) => page.users) || [],
+    [infiniteData]
+  );
 
   // Client-side filtered users
   const clientFilteredUsers = React.useMemo(() => {
@@ -151,7 +154,7 @@ export const HomeScreen: React.FC = () => {
         <Button variant="outline" onPress={handleLoadMoreSearch} style={styles.loadMoreButton}>
           Load More Results from Server
         </Button>
-        <Text variant="caption" style={{ color: COLORS.textSecondary, textAlign: 'center' }}>
+        <Text variant="caption" style={[styles.helperText, { color: COLORS.textSecondary }]}>
           Showing {clientFilteredUsers.length} results from loaded data
         </Text>
       </View>
@@ -241,10 +244,16 @@ export const HomeScreen: React.FC = () => {
 
       {/* Scrollable User List */}
       <FlatList
+        removeClippedSubviews={true}
+        initialNumToRender={10}
+        maxToRenderPerBatch={10}
+        windowSize={5}
+        testID="users-list"
         data={users}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
         keyboardDismissMode="on-drag"
+        keyboardShouldPersistTaps="handled"
         ListFooterComponent={
           <>
             {renderLoadMoreButton()}
@@ -305,5 +314,8 @@ const styles = StyleSheet.create({
   },
   loadMoreButton: {
     minWidth: 200,
+  },
+  helperText: {
+    textAlign: 'center',
   },
 });

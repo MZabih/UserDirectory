@@ -46,6 +46,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   return (
     <View style={styles.container}>
       <Input
+        testID="search-input"
         placeholder={placeholder}
         value={value}
         onChangeText={onChangeText}
