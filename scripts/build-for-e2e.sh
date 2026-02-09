@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Simple build script for E2E testing
-# This script builds the app using Expo's build system
+# This script builds a standalone app using xcodebuild (for Detox E2E tests)
 
 set -e
 
@@ -30,18 +30,34 @@ SIM_NAME=$(xcrun simctl list devices available | grep "$SIM_UDID" | sed 's/.*(\(
 echo "  ✅ Found: $SIM_NAME ($SIM_UDID)"
 echo ""
 
-# Step 3: Build with Expo
+# Step 3: Build with xcodebuild (standalone app for Detox)
 echo "🏗️  Step 3/4: Building app (this will take 3-5 minutes)..."
 echo "  📍 You'll see compilation progress below..."
 echo ""
 
-# Build using Expo (this handles all the Expo-specific setup)
-npx expo run:ios \
-  --configuration Debug \
-  --device "$SIM_UDID" \
-  --no-install \
-  --no-bundler \
-  2>&1 | tee /tmp/expo-build.log
+# Ensure pods are installed
+if [ ! -d "ios/Pods" ]; then
+  echo "  📦 Installing CocoaPods..."
+  cd ios && pod install && cd ..
+fi
+
+# Note: Codegen runs automatically during Xcode build
+# If building via command line fails, use Xcode instead (see HOW_TO_BUILD_AND_TEST.md)
+
+# Clean previous build
+echo "  🧹 Cleaning previous build..."
+rm -rf ios/build
+
+# Build using xcodebuild (creates standalone app, not Expo dev client)
+xcodebuild \
+  -workspace ios/UserDirectory.xcworkspace \
+  -scheme UserDirectory \
+  -configuration Debug \
+  -sdk iphonesimulator \
+  -derivedDataPath ios/build \
+  CODE_SIGNING_ALLOWED=NO \
+  clean build \
+  2>&1 | tee /tmp/xcode-build.log
 
 BUILD_EXIT_CODE=${PIPESTATUS[0]}
 
@@ -75,7 +91,8 @@ else
   echo "   1. Check the error messages above"
   echo "   2. Try: npx expo prebuild --clean --platform ios"
   echo "   3. Try: cd ios && pod install && cd .."
+  echo "   4. Or build in Xcode: open ios/UserDirectory.xcworkspace"
   echo ""
-  echo "📋 Full build log saved to: /tmp/expo-build.log"
+  echo "📋 Full build log saved to: /tmp/xcode-build.log"
   exit 1
 fi

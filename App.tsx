@@ -5,7 +5,8 @@
 
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, SafeAreaView } from 'react-native';
+import { StyleSheet } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { COLORS } from './src/constants';
 import AppNavigator from './src/navigation/AppNavigator';
@@ -23,12 +24,14 @@ const queryClient = new QueryClient({
 
 export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <SafeAreaView style={styles.container}>
-        <AppNavigator />
-        <StatusBar style="auto" />
-      </SafeAreaView>
-    </QueryClientProvider>
+    <SafeAreaProvider>
+      <QueryClientProvider client={queryClient}>
+        <SafeAreaView style={styles.container}>
+          <AppNavigator />
+          <StatusBar style="auto" />
+        </SafeAreaView>
+      </QueryClientProvider>
+    </SafeAreaProvider>
   );
 }
 const styles = StyleSheet.create({

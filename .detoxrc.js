@@ -9,6 +9,16 @@ module.exports = {
       setupTimeout: 120000
     }
   },
+  behavior: {
+    init: {
+      exposeGlobals: true,
+      launchApp: 'auto',
+      reinstallApp: true
+    },
+    cleanup: {
+      shutdownDevice: false
+    }
+  },
   apps: {
     'ios.debug': {
   type: 'ios.app',
