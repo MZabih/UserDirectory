@@ -1,6 +1,23 @@
 # E2E Testing with Detox
 
-This document describes the End-to-End (E2E) testing setup using Detox for the User Directory application.
+## 📖 About This Document
+
+**Purpose:** Comprehensive guide for **E2E testing** with Detox.
+
+**When to use this:**
+- ✅ You want to understand E2E test structure and implementation
+- ✅ You need to know what test IDs are available
+- ✅ You're writing or modifying E2E tests
+- ✅ You need Detox configuration details
+- ✅ You're troubleshooting E2E-specific issues
+
+**Related documents:**
+- **[HOW_TO_BUILD_AND_TEST.md](./HOW_TO_BUILD_AND_TEST.md)** - **Read this first!** Step-by-step build instructions (required before running E2E tests)
+- **[README.md](./README.md)** - Project overview and quick start
+
+**Important:** Before running E2E tests, you **must** build the app. See [HOW_TO_BUILD_AND_TEST.md](./HOW_TO_BUILD_AND_TEST.md) for detailed build instructions, including the critical Xcode DerivedData path configuration.
+
+---
 
 ## 📋 Overview
 
@@ -47,65 +64,18 @@ npm install
 
 ### Build Native Apps
 
-**Important:** Detox requires native builds (not Expo Go). You need to create development builds:
+**⚠️ IMPORTANT:** Detox requires native builds (not Expo Go). 
 
-#### For iOS:
+**📖 For detailed build instructions, see: [HOW_TO_BUILD_AND_TEST.md](./HOW_TO_BUILD_AND_TEST.md)**
 
-**Option 1: Using Detox Build Command (Recommended)**
+**Quick summary:**
+1. **Configure Xcode DerivedData path** (REQUIRED - see [HOW_TO_BUILD_AND_TEST.md](./HOW_TO_BUILD_AND_TEST.md#4-configure-xcode-deriveddata-path-required))
+2. **Build the app:**
+   - **Recommended:** Build in Xcode GUI (⌘ + B) - see [HOW_TO_BUILD_AND_TEST.md](./HOW_TO_BUILD_AND_TEST.md#step-by-step-xcode-build)
+   - **Alternative:** `npm run build:e2e:ios` - see [HOW_TO_BUILD_AND_TEST.md](./HOW_TO_BUILD_AND_TEST.md#alternative-build-via-command-line)
+3. **Verify build:** Check that app exists at `ios/build/Build/Products/Debug-iphonesimulator/UserDirectory.app/`
 
-```bash
-# Ensure pods are installed first
-cd ios && pod install && cd ..
-
-# Build iOS app for testing
-npm run build:e2e:ios
-```
-
-**Option 2: Using Expo Run (Alternative)**
-
-If the Detox build fails due to Expo Constants script issues, use Expo's build system:
-
-```bash
-# Build using Expo (handles Expo config automatically)
-npx expo run:ios --configuration Debug
-
-# Then update Detox config to point to the built app:
-# binaryPath: 'ios/build/Build/Products/Debug-iphonesimulator/UserDirectory.app'
-```
-
-**Option 3: Manual Build**
-
-```bash
-# Generate native project (if not done)
-npx expo prebuild --clean
-
-# Install CocoaPods
-cd ios && pod install && cd ..
-
-# Build manually
-xcodebuild -workspace ios/UserDirectory.xcworkspace \
-  -scheme UserDirectory \
-  -configuration Debug \
-  -sdk iphonesimulator \
-  -derivedDataPath ios/build \
-  CODE_SIGNING_ALLOWED=NO
-```
-
-**Note:** If you encounter Expo Constants script errors, ensure:
-1. `app.json` is valid
-2. Run `npx expo config --type public` successfully
-3. CocoaPods are properly installed (`cd ios && pod install`)
-
-#### For Android:
-
-```bash
-# Build Android app for testing
-npm run build:e2e:android
-
-# Or manually:
-npx expo prebuild
-cd android && ./gradlew assembleDebug && cd ..
-```
+**Why this matters:** Without proper build setup (especially DerivedData path), E2E tests will fail with "Info.plist not found" or "bundle identifier" errors.
 
 ---
 
@@ -420,39 +390,40 @@ module.exports = {
 
 ## 🚀 Development Workflow
 
-### 1. Make Changes
+### When Do You Need to Rebuild for E2E Tests?
+
+**✅ YES, rebuild needed for:**
+- **JavaScript/TypeScript changes** (React Native code) - The JS bundle is bundled into the native app
+- **Native code changes** (iOS/Android native files)
+- **Pod/package changes** (new native dependencies)
+- **Configuration changes** (app.json, native configs)
+- **First time setup** (initial build)
+
+**❌ NO rebuild needed for:**
+- **Test file changes only** (e2e/*.e2e.ts files) - Just run tests again
+- **Documentation changes** (markdown files)
+
+**Note:** Since Detox runs against a **standalone native app** (not Expo Go), your JavaScript code is bundled into the app during build. So even JS/TS changes require a rebuild.
+
+### Quick E2E Workflow
+
+**After making code changes:**
 
 ```bash
-# Make code changes
-# Add/update testIDs if needed
-```
+# 1. Rebuild the app (see HOW_TO_BUILD_AND_TEST.md for details)
+#    Option A: Xcode (⌘ + B) - Recommended
+#    Option B: npm run build:e2e:ios
 
-### 2. Rebuild App (if native code changed)
-
-```bash
-# iOS
-npm run build:e2e:ios
-
-# Android
-npm run build:e2e:android
-```
-
-### 3. Run Tests
-
-```bash
-# Run E2E tests
+# 2. Run E2E tests
 npm run test:e2e:ios
+
+# 3. Debug if needed
+detox test --configuration ios.sim.debug --loglevel trace
 ```
 
-### 4. Debug Failures
+**📖 For detailed build instructions, see: [HOW_TO_BUILD_AND_TEST.md](./HOW_TO_BUILD_AND_TEST.md)**
 
-```bash
-# Run with verbose logging
-detox test --loglevel trace
-
-# Run specific test
-detox test e2e/userFlow.e2e.ts --loglevel trace
-```
+**Time-Saving Tip:** If you're only changing test files (e2e/*.e2e.ts), you can skip rebuilding and just run `npm run test:e2e:ios`.
 
 ---
 
@@ -469,37 +440,43 @@ xcrun simctl boot "iPhone 15 Pro"
 emulator -avd Pixel_5_API_33
 ```
 
-### Issue: "Build failed" / "Expo Constants script error"
+### Issue: "Build failed" / Build-related errors
 
-**Solution:**
-```bash
-# 1. Clean build folder
-rm -rf ios/build
+**📖 For build troubleshooting, see: [HOW_TO_BUILD_AND_TEST.md](./HOW_TO_BUILD_AND_TEST.md#-troubleshooting)**
 
-# 2. Regenerate Expo config
-npx expo config --type public
+Common build issues covered there:
+- Expo Constants script errors
+- ReactCodegen errors
+- Xcode build failures
+- Scheme configuration issues
 
-# 3. Reinstall pods
-cd ios && pod install && cd ..
+### Issue: "Info.plist not found" or "CFBundleIdentifier not found"
 
-# 4. Try building again
-npm run build:e2e:ios
-
-# Alternative: Use Expo's build system
-npx expo run:ios --configuration Debug
+**Error looks like:**
+```
+field CFBundleIdentifier not found inside Info.plist
+/bin/sh: PRODUCT_BUNDLE_IDENTIFIER: command not found
 ```
 
-**If Expo Constants script still fails:**
-- This is a known issue with Expo SDK 54
-- Try using `npx expo run:ios` instead of Detox build
-- Or use Expo's development build system (EAS Build)
+**This happens when:** Xcode builds to the default DerivedData location instead of `ios/build/`, causing Info.plist to not be properly processed.
 
-### Issue: "App not found"
+**📖 Solution: See [HOW_TO_BUILD_AND_TEST.md](./HOW_TO_BUILD_AND_TEST.md#4-configure-xcode-deriveddata-path-required)**
 
-**Solution:**
-- Ensure you've run `npx expo prebuild` to generate native folders
-- Verify build paths in `.detoxrc.js` match your project structure
-- Check that the app was built successfully
+The fix is to configure Xcode's DerivedData path to `ios/build/`. This is a **critical step** that must be done before building.
+
+### Issue: "App not found" / "Build input file cannot be found"
+
+**This usually means the app wasn't built or is in the wrong location.**
+
+**📖 Solution: See [HOW_TO_BUILD_AND_TEST.md](./HOW_TO_BUILD_AND_TEST.md#-troubleshooting)**
+
+Quick checks:
+1. **Build the app first** - Follow build instructions in [HOW_TO_BUILD_AND_TEST.md](./HOW_TO_BUILD_AND_TEST.md)
+2. **Verify build location:**
+   ```bash
+   ls -la ios/build/Build/Products/Debug-iphonesimulator/UserDirectory.app/Info.plist
+   ```
+3. **Check Detox config** - Verify `binaryPath` in `.detoxrc.js` matches the build location
 
 ### Issue: "Tests timeout"
 

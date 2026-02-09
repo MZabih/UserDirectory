@@ -19,7 +19,7 @@ export const EmptyStateDemo: React.FC = () => {
         title="All Components Ready!"
         description="Phase 2 Complete - Design System Built"
         actionText="View Code"
-        onAction={() => console.log('Action pressed')}
+        onAction={() => {}}
       />
     </Card>
   );

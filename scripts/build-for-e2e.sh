@@ -16,18 +16,18 @@ npx expo config --type public > /dev/null 2>&1 || echo "  (Config already exists
 echo "  ✅ Config generated"
 echo ""
 
-# Step 2: Get available simulator
-echo "📱 Step 2/4: Finding available simulator..."
-SIM_UDID=$(xcrun simctl list devices available | grep "iPhone" | grep -v "unavailable" | head -1 | grep -o '[A-F0-9-]\{36\}' || echo "")
+# Step 2: Check for simulator (optional - not required for building)
+echo "📱 Step 2/4: Checking for simulator (optional)..."
+SIM_UDID=$(xcrun simctl list devices available 2>/dev/null | grep "iPhone" | grep -v "unavailable" | head -1 | grep -o '[A-F0-9-]\{36\}' || echo "")
 
 if [ -z "$SIM_UDID" ]; then
-  echo "  ❌ No iPhone simulator found!"
-  echo "  💡 Please create a simulator in Xcode or run: xcrun simctl list devices"
-  exit 1
+  echo "  ⚠️  Simulator service not accessible (this is OK for building)"
+  echo "  💡 Simulator check skipped - build will continue"
+  echo "  💡 Note: You'll need a working simulator to run tests later"
+else
+  SIM_NAME=$(xcrun simctl list devices available 2>/dev/null | grep "$SIM_UDID" | sed 's/.*(\(.*\))/\1/' | head -1)
+  echo "  ✅ Found: $SIM_NAME ($SIM_UDID)"
 fi
-
-SIM_NAME=$(xcrun simctl list devices available | grep "$SIM_UDID" | sed 's/.*(\(.*\))/\1/' | head -1)
-echo "  ✅ Found: $SIM_NAME ($SIM_UDID)"
 echo ""
 
 # Step 3: Build with xcodebuild (standalone app for Detox)
@@ -49,6 +49,13 @@ echo "  🧹 Cleaning previous build..."
 rm -rf ios/build
 
 # Build using xcodebuild (creates standalone app, not Expo dev client)
+# Note: For New Architecture, codegen runs automatically as part of build phases
+# If codegen fails, the build will fail with "Build input file cannot be found" errors
+# In that case, use Xcode GUI which handles codegen more reliably
+echo "  ⚠️  Note: If build fails with 'codegen' errors, use Xcode GUI instead:"
+echo "     open ios/UserDirectory.xcworkspace"
+echo ""
+
 xcodebuild \
   -workspace ios/UserDirectory.xcworkspace \
   -scheme UserDirectory \

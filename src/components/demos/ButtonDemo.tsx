@@ -16,10 +16,10 @@ export const ButtonDemo: React.FC = () => {
       <Text variant="h4" weight="semibold" style={styles.title}>
         Button Component
       </Text>
-      <Button variant="primary" onPress={() => console.log('Primary')} style={styles.button}>
+      <Button variant="primary" onPress={() => {}} style={styles.button}>
         Primary Button
       </Button>
-      <Button variant="outline" onPress={() => console.log('Outline')} style={styles.button}>
+      <Button variant="outline" onPress={() => {}} style={styles.button}>
         Outline Button
       </Button>
       <Button

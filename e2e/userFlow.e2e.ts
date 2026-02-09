@@ -216,48 +216,4 @@ describe('User Flow E2E Tests', () => {
       await expect(element(by.id(TEST_IDS.EMPTY_STATE_ICON))).toBeVisible();
     });
   });
-
-  // describe('Complete User Journey', () => {
-  //   it('should complete the full user flow: launch → search → navigate → interact', async () => {
-  //     // 1. Launch and verify home screen (with mocked network, instant)
-  //     await waitFor(element(by.id(TEST_IDS.USERS_LIST)))
-  //       .toBeVisible()
-  //       .withTimeout(TIMEOUTS.MEDIUM);
-  //     await expect(element(by.id(TEST_IDS.USERS_LIST))).toBeVisible();
-
-  //     // 2. Use search - verify search functionality works
-  //     const searchInput = element(by.id(TEST_IDS.SEARCH_INPUT));
-  //     await expect(searchInput).toBeVisible();
-  //     await searchInput.tap();
-  //     await searchInput.typeText('John');
-
-  //     // Wait for search to process (client-side filtering is instant but UI needs to update)
-  //     await new Promise((resolve) => setTimeout(resolve, TIMEOUTS.UI_UPDATE * 2));
-
-  //     // Verify search worked - "John" exists in mock data, so list should be visible
-  //     // Clear search immediately to restore full list for navigation test
-  //     await searchInput.tap();
-  //     await searchInput.clearText();
-  //     await waitFor(element(by.id(TEST_IDS.USERS_LIST)))
-  //       .toBeVisible()
-  //       .withTimeout(TIMEOUTS.MEDIUM);
-
-  //     // 3. Tap a user to navigate
-  //     await waitFor(element(by.id(TEST_IDS.USER_ITEM(1))))
-  //       .toBeVisible()
-  //       .withTimeout(TIMEOUTS.SHORT);
-  //     await element(by.id(TEST_IDS.USER_ITEM(1))).tap();
-
-  //     // 4. Verify detail screen opened (with mocked network, instant)
-  //     await waitFor(element(by.id(TEST_IDS.USER_DETAIL_SCREEN)))
-  //       .toBeVisible()
-  //       .withTimeout(TIMEOUTS.SHORT);
-  //     await expect(element(by.id(TEST_IDS.USER_AVATAR))).toBeVisible();
-
-  //     // 5. Interact with animated element (avatar)
-  //     const avatar = element(by.id(TEST_IDS.USER_AVATAR));
-  //     await avatar.tap();
-  //     await expect(avatar).toBeVisible();
-  //   });
-  // });
 });

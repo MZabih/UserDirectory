@@ -46,24 +46,113 @@ UserDirectory/
 
 ### Prerequisites
 
+**Required for all platforms:**
 - Node.js (v18 or higher)
 - npm or yarn
-- iOS Simulator (Mac only) or Android Emulator
+
+**For iOS (Mac only):**
+- Xcode (latest version recommended)
+- iOS Simulator (comes with Xcode)
+- CocoaPods (`sudo gem install cocoapods`)
+
+**For Android:**
+- Android Studio
+- Android SDK configured
+- Android Emulator created
 
 ### Installation
 
-```bash
-# Install dependencies
-npm install
+#### Step 1: Clone and Install Dependencies
 
-# Start the development server
+```bash
+# Clone the repository (if not already done)
+git clone <repository-url>
+cd UserDirectory
+
+# Install npm dependencies
+npm install
+```
+
+#### Step 2: iOS Setup (Mac only)
+
+```bash
+# Install CocoaPods dependencies
+cd ios
+pod install
+cd ..
+```
+
+**Note:** If you don't have CocoaPods installed:
+```bash
+sudo gem install cocoapods
+```
+
+#### Step 2a: Configure Xcode DerivedData Path (REQUIRED for E2E Testing!)
+
+**⚠️ IMPORTANT:** Before building for E2E tests, you must configure Xcode's DerivedData path:
+
+1. In Xcode: **Xcode → Settings** (or **Preferences**)
+2. Go to **Locations** tab
+3. Under **Derived Data**, click the arrow (→) next to the path
+4. Navigate to your project folder
+5. Set path to: `ios/build` (relative to your project root)
+   - Example: If your project is at `/path/to/UserDirectory/`, set it to `/path/to/UserDirectory/ios/build`
+6. Close Settings
+
+**Why?** Detox expects the app at `ios/build/Build/Products/...`. Without this, builds go to Xcode's default location and Info.plist won't be processed correctly, causing test failures.
+
+**📖 For detailed instructions, see: [HOW_TO_BUILD_AND_TEST.md](./HOW_TO_BUILD_AND_TEST.md)**
+
+#### Step 3: Start the App
+
+**Option A: Using Expo (Recommended for Development)**
+
+```bash
+# Start the Expo development server
 npm start
 
-# Run on iOS
+# In another terminal, run on iOS
 npm run ios
 
-# Run on Android
+# Or run on Android
 npm run android
+```
+
+**Option B: Using Expo Go App**
+
+1. Install Expo Go on your iOS/Android device
+2. Run `npm start`
+3. Scan the QR code with Expo Go app
+
+**Option C: Build Native App (For E2E Testing)**
+
+For E2E testing with Detox, you need a native build. See [HOW_TO_BUILD_AND_TEST.md](./HOW_TO_BUILD_AND_TEST.md) for detailed instructions.
+
+### Troubleshooting
+
+**iOS: "No such module" or Pod errors**
+```bash
+cd ios
+pod deintegrate
+pod install
+cd ..
+```
+
+**Android: "SDK not found"**
+- Open Android Studio
+- Go to Tools → SDK Manager
+- Install required SDK components
+
+**Metro bundler issues**
+```bash
+# Clear cache and restart
+npm start -- --reset-cache
+```
+
+**Port already in use**
+```bash
+# Kill process on port 8081 (default Expo port)
+lsof -ti:8081 | xargs kill -9
 ```
 
 ## 🧪 Testing
